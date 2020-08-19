@@ -93,4 +93,5 @@ if __name__ == '__main__':
     bart_model.eval()
     t5_model.to(device)
     t5_model.eval()
-    app.run(host='0.0.0.0', debug=True, port=8000, use_reloader=False)
+    # app.run(host='0.0.0.0', debug=True, port=8000, use_reloader=False)
+    app.run()
