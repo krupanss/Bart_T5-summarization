@@ -2,6 +2,7 @@
 import torch
 import flask
 from flask import Flask, request, render_template
+from flask_ngrok import run_with_ngrok
 import json
 from transformers import BartTokenizer, BartForConditionalGeneration, BartConfig
 from transformers import T5Tokenizer, T5ForConditionalGeneration, T5Config
@@ -12,12 +13,14 @@ T5_PATH = 't5-base'
 # T5_PATH = 'model/t5'
 
 app = Flask(__name__)
-bart_model = BartForConditionalGeneration.from_pretrained(BART_PATH, output_past=True)
-bart_tokenizer = BartTokenizer.from_pretrained(BART_PATH, output_past=True)
+run_with_ngrok(app)
 
+bart_model = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
+bart_tokenizer = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
 
-t5_model = T5ForConditionalGeneration.from_pretrained(T5_PATH)
-t5_tokenizer = T5Tokenizer.from_pretrained(T5_PATH)
+t5_model = T5ForConditionalGeneration.from_pretrained('t5-large')
+t5_tokenizer = T5Tokenizer.from_pretrained('t5-large')
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
