@@ -52,19 +52,35 @@ def t5_summarize(input_text, num_beams=4, num_words=50):
     return output[0]
 
 
-def pegasus_summarize(input_text, num_beams=4, num_words=50):
+def pegasus_cnn_summarize(input_text, num_beams=4, num_words=50):
     input_text = str(input_text)
     input_text = ' '.join(input_text.split())
-    input_tokenized = pegasus_tokenizer.encode(input_text, return_tensors='pt').to(device)
-    summary_ids = pegasus_model.generate(input_tokenized,
-                                         num_beams=int(num_beams),
-                                         no_repeat_ngram_size=3,
-                                         length_penalty=2.0,
-                                         min_length=30,
-                                         max_length=int(num_words),
-                                         early_stopping=True)
-    output = [pegasus_tokenizer.decode(g, skip_special_tokens=True,
-                                       clean_up_tokenization_spaces=False) for g in summary_ids]
+    input_tokenized = pegasus_cnn_tokenizer.encode(input_text, return_tensors='pt').to(device)
+    summary_ids = pegasus_cnn_model.generate(input_tokenized,
+                                             num_beams=int(num_beams),
+                                             no_repeat_ngram_size=3,
+                                             length_penalty=2.0,
+                                             min_length=30,
+                                             max_length=int(num_words),
+                                             early_stopping=True)
+    output = [pegasus_cnn_tokenizer.decode(g, skip_special_tokens=True,
+                                           clean_up_tokenization_spaces=False) for g in summary_ids]
+    return output[0]
+
+
+def pegasus_med_summarize(input_text, num_beams=4, num_words=50):
+    input_text = str(input_text)
+    input_text = ' '.join(input_text.split())
+    input_tokenized = pegasus_med_tokenizer.encode(input_text, return_tensors='pt').to(device)
+    summary_ids = pegasus_med_model.generate(input_tokenized,
+                                             num_beams=int(num_beams),
+                                             no_repeat_ngram_size=3,
+                                             length_penalty=2.0,
+                                             min_length=30,
+                                             max_length=int(num_words),
+                                             early_stopping=True)
+    output = [pegasus_med_tokenizer.decode(g, skip_special_tokens=True,
+                                           clean_up_tokenization_spaces=False) for g in summary_ids]
     return output[0]
 
 
@@ -85,8 +101,10 @@ def predict():
                 output = bart_summarize(sentence, num_beams, num_words)
             elif model.lower() == 't5':
                 output = t5_summarize(sentence, num_beams, num_words)
-            elif model.lower() == 'pegasus':
-                output = pegasus_summarize(sentence, num_beams, num_words)
+            elif model.lower() == 'pegasus-cnn':
+                output = pegasus_cnn_summarize(sentence, num_beams, num_words)
+            elif model.lower() == 'pegasus-med':
+                output = pegasus_med_summarize(sentence, num_beams, num_words)
             else:
                 output = None
             response = {'response': {
@@ -110,7 +128,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     models = args.models
     print("Models names passed in Arguments:", str(models))
-    # models = 'BART,PEGASUS'
+    # models = 'BART,T5,PEGASUS-CNN,PEGASUS-MED'
     models = models.split(',')
     if 'BART' in models:
         print('Model files downloading for BART')
@@ -124,11 +142,17 @@ if __name__ == '__main__':
         t5_tokenizer = T5Tokenizer.from_pretrained('t5-large')
         t5_model.to(device)
         t5_model.eval()
-    if 'PEGASUS' in models:
-        print('Model files downloading for PEGASUS')
-        pegasus_model = PegasusForConditionalGeneration.from_pretrained('google/pegasus-cnn_dailymail')
-        pegasus_tokenizer = PegasusTokenizer.from_pretrained('google/pegasus-cnn_dailymail')
-        pegasus_model.to(device)
-        pegasus_model.eval()
+    if 'PEGASUS-CNN' in models:
+        print('Model files downloading for PEGASUS-CNN')
+        pegasus_cnn_model = PegasusForConditionalGeneration.from_pretrained('google/pegasus-cnn_dailymail')
+        pegasus_cnn_tokenizer = PegasusTokenizer.from_pretrained('google/pegasus-cnn_dailymail')
+        pegasus_cnn_model.to(device)
+        pegasus_cnn_model.eval()
+    if 'PEGASUS-MED' in models:
+        print('Model files downloading for PEGASUS-MED')
+        pegasus_med_model = PegasusForConditionalGeneration.from_pretrained('google/pegasus-pubmed')
+        pegasus_med_tokenizer = PegasusTokenizer.from_pretrained('google/pegasus-pubmed')
+        pegasus_med_model.to(device)
+        pegasus_med_model.eval()
     # app.run(host='0.0.0.0', debug=True, port=8000, use_reloader=False)
     app.run()
