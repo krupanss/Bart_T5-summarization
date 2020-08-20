@@ -113,17 +113,20 @@ if __name__ == '__main__':
     # models = 'BART,PEGASUS'
     models = models.split(',')
     if 'BART' in models:
+        print('Model files downloading for BART')
         bart_model = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
         bart_tokenizer = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
 
         bart_model.to(device)
         bart_model.eval()
     if 'T5' in models:
+        print('Model files downloading for T5')
         t5_model = T5ForConditionalGeneration.from_pretrained('t5-large')
         t5_tokenizer = T5Tokenizer.from_pretrained('t5-large')
         t5_model.to(device)
         t5_model.eval()
     if 'PEGASUS' in models:
+        print('Model files downloading for PEGASUS')
         pegasus_model = PegasusForConditionalGeneration.from_pretrained('google/pegasus-cnn_dailymail')
         pegasus_tokenizer = PegasusTokenizer.from_pretrained('google/pegasus-cnn_dailymail')
         pegasus_model.to(device)
