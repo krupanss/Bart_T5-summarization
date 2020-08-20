@@ -70,7 +70,7 @@ def pegasus_summarize(input_text, num_beams=4, num_words=50):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', models=models, models_str=','.join(models))
 
 
 @app.route('/predict', methods=['POST'])
@@ -116,7 +116,6 @@ if __name__ == '__main__':
         print('Model files downloading for BART')
         bart_model = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
         bart_tokenizer = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
-
         bart_model.to(device)
         bart_model.eval()
     if 'T5' in models:
