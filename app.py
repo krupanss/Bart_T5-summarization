@@ -85,7 +85,7 @@ def predict():
                 output = bart_summarize(sentence, num_beams, num_words)
             elif model.lower() == 't5':
                 output = t5_summarize(sentence, num_beams, num_words)
-            elif model.lower() == 'pegasus-cnn-daily':
+            elif model.lower() == 'pegasus':
                 output = pegasus_summarize(sentence, num_beams, num_words)
             else:
                 output = None
