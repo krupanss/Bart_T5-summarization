@@ -1,9 +1,10 @@
-# Bart_T5-summarization
-Summarization Task using Bart and T5 models from [HugginFace Transformers](https://github.com/huggingface/transformers)
+Source Repo: [renatoviolin/Bart_T5-summarization](https://github.com/renatoviolin/Bart_T5-summarization)  
+Credits: [renatoviolin](https://github.com/renatoviolin)
 
-It is possible to directly compare the best models for text summarization Bart and T5.
+# Text Summarization
+Summarization Task using various models available in [HugginFace Transformers](https://github.com/huggingface/transformers)
 
-## Install requeriments
+## Install requirements
 ```
 pip install -U transformers
 pip install -U torch
@@ -12,11 +13,5 @@ pip install flask
 
 ## Run
 ```
-python app.py
+python app.py -models 'BART,T5,PEGASUS-MED,PEGASUS-CNN'
 ```
-
-### Bart Summarization
-![Bart Summarization](bart.png)
-
-### T5 Summarization
-![Bart Summarization](t5.png)
